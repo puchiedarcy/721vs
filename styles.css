@@ -1,5 +1,37 @@
-#stage {
+#container {
     margin: 0 auto;
-    width: 750px;
-    border: 1px solid #DDD;
+    width: 500px;
+}
+
+#stage {
+    width: 200px;
+    height: 600px;
+    float: left;
+    overflow: scroll;
+    border: 1px solid black;
+}
+
+#nav {
+    float: left;
+    border: 1px solid gray;
+    width: 200px;
+    height: 600px;
+    text-align: center;
+    line-height: 2em;
+}
+
+.unown {
+    background-image: url("http://img3.wikia.nocookie.net/__cb20120822212826/nintendo/en/images/8/82/Blank_PKMN.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.pokemon {
+    margin: 0 auto;
+    width: 150px;
+    margin-top: 5px;
 }

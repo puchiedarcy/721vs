@@ -7,20 +7,29 @@
         
         <script src="jquery-2.1.0.min.js" type="text/javascript"></script>
         <script src="peer.min.js" type="text/javascript"></script>
+        <script src="http://fb.me/react-0.12.2.js"></script>
+        <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
         
         <title>721 Vs.</title>
     </head>
     <body>
-        <div id="stage">
+        <div id="container">
             <h2>Pokemon 721 Vs.</h2>
             
-            Your ID: <input type="text" disabled id="yourId"></input>
-            Friend ID: <input type="text" id="friendId"></input>
+            Your ID: <input type="text" disabled id="yourId"></input><br>
+            Friend ID: <input type="text" id="friendId"></input><br>
             <input type="button" value="Connect" id="connect"></input>
-            <br>
             <br>
             <input type="text" id="message" value="testerino"></input>
             <input type="button" value="Send" id="send"></input>
+            <br>
+            <br>
+            <div id="stage">
+                
+            </div>
+            <div id="nav">
+                
+            </div>
             
             <div id="log"></div>
             
@@ -64,10 +73,67 @@
                     e.preventDefault();
                     
                     conn.send($("#message").val());
-                    debugger;
-                    log.append("sent data<BR>");
                 });
             });
+        </script>
+        <script type="text/jsx">
+            var GuessableItem = React.createClass({
+                render: function() {
+                    var itemClasses = "pokemon"
+                    var imgClasses = ""
+                    if (!this.props.guessableItem.guessed) {
+                        itemClasses = itemClasses + " unown";
+                        imgClasses = "hidden"
+                    }
+                    return (
+                        <div id={this.props.guessableItem.pokedexNumber} name={this.props.guessableItem.pokemonName} className={itemClasses}> 
+                            {this.props.guessableItem.pokedexNumber}.&nbsp;
+                            <span className={imgClasses}>{this.props.guessableItem.pokemonName}<img src={"http://www.serebii.net/xy/pokemon/" + this.props.guessableItem.pokedexNumber + ".png"}></img></span>
+                        </div>
+                    );
+                }
+            });
+            
+            var GuessableList = React.createClass({
+                getInitialState: function() {
+                    return {
+                        data:[
+                            {
+                                pokedexNumber: "001",
+                                pokemonName: "Bulbasaur",
+                                guessed: false
+                            },
+                            {
+                                pokedexNumber: "002",
+                                pokemonName: "Ivysaur",
+                                guessed: true
+                            },
+                            {
+                                pokedexNumber: "003",
+                                pokemonName: "Venusaur",
+                                guessed: false
+                            }
+                        ]
+                    };
+                },
+                render: function() {
+                    var guessableItems = this.state.data.map(function (guessableItem) {
+                        return (
+                            <GuessableItem guessableItem={guessableItem} />
+                        );
+                    });
+                    return (
+                        <div className="commentList">
+                            {guessableItems}
+                        </div>
+                    );
+                }
+            });
+            
+            React.render(
+                <GuessableList />,
+                document.getElementById('stage')
+            );
         </script>
     </body>
 </html>
