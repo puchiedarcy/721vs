@@ -13,26 +13,17 @@
         <title>721 Vs.</title>
     </head>
     <body>
+
+        <h2>Pokemon 721 Vs.</h2>
+        
+        Your ID: <input type="text" disabled id="yourId"></input><br>
+        Friend ID: <input type="text" id="friendId"></input><br>
+        <input type="button" value="Connect" id="connect"></input>
+        <br>
+        <br>
+        <br>
         <div id="container">
-            <h2>Pokemon 721 Vs.</h2>
-            
-            Your ID: <input type="text" disabled id="yourId"></input><br>
-            Friend ID: <input type="text" id="friendId"></input><br>
-            <input type="button" value="Connect" id="connect"></input>
-            <br>
-            <input type="text" id="message" value="testerino"></input>
-            <input type="button" value="Send" id="send"></input>
-            <br>
-            <br>
-            <div id="stage">
-                
-            </div>
-            <div id="nav">
-                
-            </div>
-            
-            <div id="log"></div>
-            
+
         </div>
         
         <script>
@@ -102,10 +93,30 @@
                         );
                     });
                     return (
-                        <div className="commentList">
+                        <div className="guessableList">
                             {guessableItems}
                         </div>
                     );
+                }
+            });
+            
+            var GuessBox = React.createClass({
+                render: function() {
+                    return (
+                        <form onSubmit={this.handleGuess}>
+                            <input type="text" placeholder="Type your guess here." ref="guess"></input>
+                            <input type="submit" value="Send"></input>
+                        </form>
+                    );
+                },
+                handleGuess: function(e) {
+                    e.preventDefault();
+                    var guess = this.refs.guess.getDOMNode().value.trim();
+                    if (!guess) {
+                        return;
+                    }
+                    alert(guess);
+                    this.refs.guess.getDOMNode().value = '';
                 }
             });
             
@@ -133,14 +144,17 @@
                 },
                 render: function() {
                     return (
-                        <GuessableList guessableItems={this.state.data} />
+                        <div>
+                            <GuessBox />
+                            <GuessableList guessableItems={this.state.data} />
+                        </div>
                     );
                 }
             });
             
             React.render(
                 <GuessableGame />,
-                document.getElementById('stage')
+                document.getElementById('container')
             );
         </script>
     </body>

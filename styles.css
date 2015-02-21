@@ -3,7 +3,7 @@
     width: 500px;
 }
 
-#stage {
+.guessableList {
     width: 200px;
     height: 600px;
     float: left;
