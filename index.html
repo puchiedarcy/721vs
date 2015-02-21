@@ -95,6 +95,21 @@
             });
             
             var GuessableList = React.createClass({
+                render: function() {
+                    var guessableItems = this.props.guessableItems.map(function (guessableItem) {
+                        return (
+                            <GuessableItem guessableItem={guessableItem} />
+                        );
+                    });
+                    return (
+                        <div className="commentList">
+                            {guessableItems}
+                        </div>
+                    );
+                }
+            });
+            
+            var GuessableGame = React.createClass({
                 getInitialState: function() {
                     return {
                         data:[
@@ -117,21 +132,14 @@
                     };
                 },
                 render: function() {
-                    var guessableItems = this.state.data.map(function (guessableItem) {
-                        return (
-                            <GuessableItem guessableItem={guessableItem} />
-                        );
-                    });
                     return (
-                        <div className="commentList">
-                            {guessableItems}
-                        </div>
+                        <GuessableList guessableItems={this.state.data} />
                     );
                 }
             });
             
             React.render(
-                <GuessableList />,
+                <GuessableGame />,
                 document.getElementById('stage')
             );
         </script>
