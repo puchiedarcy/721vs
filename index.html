@@ -87,7 +87,7 @@
             
             var GuessableList = React.createClass({
                 render: function() {
-                    var guessableItems = this.props.guessableItems.map(function (guessableItem) {
+                    var guessableItems = this.props.guessableList.map(function (guessableItem) {
                         return (
                             <GuessableItem guessableItem={guessableItem} />
                         );
@@ -115,7 +115,7 @@
                     if (!guess) {
                         return;
                     }
-                    alert(guess);
+                    this.props.registerGuess(guess);
                     this.refs.guess.getDOMNode().value = '';
                 }
             });
@@ -123,32 +123,47 @@
             var GuessableGame = React.createClass({
                 getInitialState: function() {
                     return {
-                        data:[
-                            {
-                                pokedexNumber: "001",
-                                pokemonName: "Bulbasaur",
-                                guessed: false
-                            },
-                            {
-                                pokedexNumber: "002",
-                                pokemonName: "Ivysaur",
-                                guessed: true
-                            },
-                            {
-                                pokedexNumber: "003",
-                                pokemonName: "Venusaur",
-                                guessed: false
+                        data:{
+                            guessableList : [
+                                {
+                                    pokedexNumber: "001",
+                                    pokemonName: "Bulbasaur",
+                                    guessed: false
+                                },
+                                {
+                                    pokedexNumber: "002",
+                                    pokemonName: "Ivysaur",
+                                    guessed: true
+                                },
+                                {
+                                    pokedexNumber: "003",
+                                    pokemonName: "Venusaur",
+                                    guessed: false
+                                }
+                            ],
+                            guessToListMap : {
+                                bulbasaur: 0,
+                                ivysaur: 1,
+                                venusaur: 2
                             }
-                        ]
+                        }
                     };
                 },
                 render: function() {
                     return (
                         <div>
-                            <GuessBox />
-                            <GuessableList guessableItems={this.state.data} />
+                            <GuessBox registerGuess={this.onGuess} />
+                            <GuessableList guessableList={this.state.data.guessableList} />
                         </div>
                     );
+                },
+                onGuess: function(guess) {
+                    var tempState = this.state;
+                    if (tempState.data.guessToListMap.hasOwnProperty(guess)) {
+                        tempState.data.guessableList[tempState.data.guessToListMap[guess]].guessed = true;
+                    }
+                    
+                    this.setState(tempState);
                 }
             });
             
