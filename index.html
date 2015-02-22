@@ -78,7 +78,7 @@
                 render: function() {
                     var guessableItems = this.props.guessableList.map(function (guessableItem) {
                         return (
-                            <GuessableItem guessableItem={guessableItem} />
+                            <GuessableItem key={guessableItem.pokedexNumber} guessableItem={guessableItem} />
                         );
                     });
                     return (
@@ -114,7 +114,8 @@
                     return {
                         key: "yd1nanm1c4fxyldi",
                         yourId: null,
-                        friendId: null
+                        friendId: null,
+                        conn: null
                     };
                 },
                 render: function() {
@@ -129,17 +130,32 @@
                 handleConnect: function(e) {
                     e.preventDefault();
                     
-                    
+                    this.state.conn = peer.connect(this.refs.friendId.getDOMNode().value.trim());
+                    this.bindConnection(this.state.conn);
                 },
                 componentDidMount: function() {
                 var self = this;
                     var peer = new Peer({
                         key: self.state.key
                     });
+                    
                     peer.on('open', function(id) {
                         var tempState = self.state;
                         tempState.yourId = id;
                         self.setState(tempState);
+                    });
+                    
+                    peer.on('connection', function(c) {
+                        self.bindConnection(c);
+                    });
+                },
+                bindConnection: function(c) {
+                    this.state.conn = c;
+                    alert(456);
+                    c.on('open', function() {
+                        c.on('data', function(data) {
+                            alert(data);
+                        });
                     });
                 }
             });
