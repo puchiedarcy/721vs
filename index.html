@@ -15,47 +15,6 @@
     <body>
         <div id="container"></div>
         
-        <script>
-            var log = $("#log");
-            var peer = new Peer({
-                key: 'yd1nanm1c4fxyldi'
-            });
-            var conn = null;
-            
-            $(document).ready(function() {
-                peer.on('open', function(id) {
-                    $("#yourId").val(id);
-                });
-                
-                function bindConnection(c) {
-                    conn = c;
-                    log.append("receinved connection<BR>");
-                    
-                    conn.on('open', function() {
-                        conn.on('data', function(data) {
-                            log.append(data + "<br>");
-                        });
-                    });
-                }
-                
-                peer.on('connection', function(c) {
-                    bindConnection(c);
-                });
-                
-                $("#connect").bind('click', function(e) {
-                    e.preventDefault();
-                    
-                    c = peer.connect($("#friendId").val());
-                    bindConnection(c);
-                });
-                
-                $("#send").bind('click', function(e) {
-                    e.preventDefault();
-                    
-                    conn.send($("#message").val());
-                });
-            });
-        </script>
         <script type="text/jsx">
             var GuessableItem = React.createClass({
                 render: function() {
@@ -115,6 +74,7 @@
                         key: "yd1nanm1c4fxyldi",
                         yourId: null,
                         friendId: null,
+                        peer: null,
                         conn: null
                     };
                 },
@@ -130,7 +90,7 @@
                 handleConnect: function(e) {
                     e.preventDefault();
                     
-                    var c = peer.connect(this.refs.friendId.getDOMNode().value.trim());
+                    var c = this.state.peer.connect(this.refs.friendId.getDOMNode().value.trim());
                     this.bindConnection(c);
                 },
                 componentDidMount: function() {
@@ -148,6 +108,8 @@
                     peer.on('connection', function(c) {
                         self.bindConnection(c);
                     });
+                    
+                    self.state.peer = peer;
                 },
                 bindConnection: function(c) {
                     var self = this;
