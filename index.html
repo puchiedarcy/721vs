@@ -13,18 +13,7 @@
         <title>721 Vs.</title>
     </head>
     <body>
-
-        <h2>Pokemon 721 Vs.</h2>
-        
-        Your ID: <input type="text" disabled id="yourId"></input><br>
-        Friend ID: <input type="text" id="friendId"></input><br>
-        <input type="button" value="Connect" id="connect"></input>
-        <br>
-        <br>
-        <br>
-        <div id="container">
-
-        </div>
+        <div id="container"></div>
         
         <script>
             var log = $("#log");
@@ -120,6 +109,41 @@
                 }
             });
             
+            var ConnectPanel = React.createClass({
+                getInitialState: function() {
+                    return {
+                        key: "yd1nanm1c4fxyldi",
+                        yourId: null,
+                        friendId: null
+                    };
+                },
+                render: function() {
+                    return (
+                        <form onSubmit={this.handleConnect}>
+                            Your ID: <input type="text" ref="yourId" disabled value={this.state.yourId}></input><br />
+                            Friend ID: <input type="text" ref="friendId"></input><br />
+                            <input type="submit" value="Connect" ></input>
+                        </form>
+                    );
+                },
+                handleConnect: function(e) {
+                    e.preventDefault();
+                    
+                    
+                },
+                componentDidMount: function() {
+                var self = this;
+                    var peer = new Peer({
+                        key: self.state.key
+                    });
+                    peer.on('open', function(id) {
+                        var tempState = self.state;
+                        tempState.yourId = id;
+                        self.setState(tempState);
+                    });
+                }
+            });
+            
             var GuessableGame = React.createClass({
                 getInitialState: function() {
                     return {
@@ -133,7 +157,7 @@
                                 {
                                     pokedexNumber: "002",
                                     pokemonName: "Ivysaur",
-                                    guessed: true
+                                    guessed: false
                                 },
                                 {
                                     pokedexNumber: "003",
@@ -152,6 +176,8 @@
                 render: function() {
                     return (
                         <div>
+                            <ConnectPanel />
+                            <br />
                             <GuessBox registerGuess={this.onGuess} />
                             <GuessableList guessableList={this.state.data.guessableList} />
                         </div>
