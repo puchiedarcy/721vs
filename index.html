@@ -122,9 +122,36 @@
                     this.state.conn = c;
                 },
                 componentWillReceiveProps: function (newProps) {
-                    if(this.state.conn) {
+                    if(this.state.conn && this.props.guess != newProps.guess) {
                         this.state.conn.send({guess: newProps.guess});
                     }
+                }
+            });
+            
+            var ScoreBox = React.createClass({
+                getInitialState: function() {
+                    return {
+                        yourScore: 0,
+                        friendScore: 0
+                    };
+                },
+                render: function() {
+                    return (
+                        <div className="nav">
+                            <p>Your Score: {this.state.yourScore}</p>
+                            <p>Friend Score: {this.state.friendScore}</p>
+                        </div>
+                    );
+                },
+                componentWillReceiveProps: function (newProps) {
+                    var tempState = this.state;
+                    if (newProps.guesser == 0) {
+                        tempState.yourScore = tempState.yourScore + 1;
+                    } else {
+                        tempState.friendScore = tempState.friendScore + 1;
+                    }
+                    
+                    this.setState(tempState);
                 }
             });
             
@@ -154,7 +181,9 @@
                                 ivysaur: 1,
                                 venusaur: 2
                             },
-                            guess: null
+                            guess: null,
+                            guessNo: 0,
+                            guesser: null
                         }
                     };
                 },
@@ -165,22 +194,36 @@
                             <br />
                             <GuessBox registerGuess={this.onGuess} />
                             <GuessableList guessableList={this.state.data.guessableList} />
+                            <ScoreBox guessNo={this.state.data.guessNo} guesser={this.state.data.guesser} />
                         </div>
                     );
                 },
                 onGuess: function(guess) {
+                    if (!guess) {
+                        return;
+                    }
+                    
                     var tempState = this.state;
                     if (tempState.data.guessToListMap.hasOwnProperty(guess)) {
                         tempState.data.guessableList[tempState.data.guessToListMap[guess]].guessed = true;
                         tempState.data.guess = guess;
+                        tempState.data.guessNo = tempState.data.guessNo + 1;
+                        tempState.data.guesser = 0;
                         
                         this.setState(tempState);
                     }
                 },
                 onOpponentGuess: function(guess) {
+                    if (!guess) {
+                        return;
+                    }
+                    
                     var tempState = this.state;
                     if (tempState.data.guessToListMap.hasOwnProperty(guess)) {
                         tempState.data.guessableList[tempState.data.guessToListMap[guess]].guessed = true;
+                        tempState.data.guessNo = tempState.data.guessNo + 1;
+                        tempState.data.guesser = 1;
+                        
                         
                         this.setState(tempState);
                     }
