@@ -6,8 +6,9 @@
         <link href="styles.css" rel="stylesheet" type="text/css">
         
         <script src="jquery-2.1.0.min.js" type="text/javascript"></script>
+        <script src="https://code.jquery.com/color/jquery.color-2.1.2.min.js" type="text/javascript"></script>
         <script src="peer.js" type="text/javascript"></script>
-        <script src="pokemon.js" type="text/javascript"></script>
+        <script src="pokemon-full.js" type="text/javascript"></script>
         <script src="http://fb.me/react-0.12.2.js"></script>
         <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
         
@@ -17,6 +18,14 @@
         <div id="container"></div>
         
         <script type="text/jsx">
+        
+            jQuery.fn.scrollTo = function(elem, speed) { 
+                $(this).animate({
+                    scrollTop:  $(this).scrollTop() - $(this).offset().top + $(elem).offset().top 
+                }, speed == undefined ? 1000 : speed); 
+                return this; 
+            };
+            
             var GuessableItem = React.createClass({
                 render: function() {
                     var itemClasses = "pokemon"
@@ -26,7 +35,7 @@
                         imgClasses = "hidden"
                     }
                     return (
-                        <div id={this.props.guessableItem.pokedexNumber} name={this.props.guessableItem.pokemonName} className={itemClasses}> 
+                        <div id={this.props.guessableItem.pokemonName.toLowerCase()} className={itemClasses}> 
                             {this.props.guessableItem.pokedexNumber}.&nbsp;
                             <span className={imgClasses}>{this.props.guessableItem.pokemonName}<img src={"http://www.serebii.net/xy/pokemon/" + this.props.guessableItem.pokedexNumber + ".png"}></img></span>
                         </div>
@@ -53,7 +62,7 @@
                 render: function() {
                     return (
                         <form onSubmit={this.handleGuess}>
-                            <input type="text" placeholder="Type your guess here." ref="guess"></input>
+                            <input id="guessInput" disabled type="text" placeholder="Type your guess here." ref="guess"></input>
                             <input type="submit" value="Send"></input>
                         </form>
                     );
@@ -192,6 +201,15 @@
                         tempState.data.guessNo = tempState.data.guessNo + 1;
                         tempState.data.guesser = 0;
                         
+                        var theGuess = $('#' + guess);
+                        $('.guessableList').scrollTo(theGuess, 200);
+                        
+                        theGuess.css('background-color', '#4CC417');
+                        theGuess.animate({
+                            'color': '#4CC417',
+                            'background-color': "#fff"
+                        }, 600 );
+                        
                         this.setState(tempState);
                     }
                 },
@@ -206,6 +224,14 @@
                         tempState.data.guessNo = tempState.data.guessNo + 1;
                         tempState.data.guesser = 1;
                         
+                        var theGuess = $('#' + guess);
+                        $('.guessableList').scrollTo(theGuess, 200);
+                        
+                        theGuess.css('background-color', '#F70D1A');
+                        theGuess.animate({
+                            'color': '#F70D1A',
+                            'background-color': "#fff"
+                        }, 600 );
                         
                         this.setState(tempState);
                     }
@@ -216,6 +242,13 @@
                 <GuessableGame />,
                 document.getElementById('container')
             );
+            
+            $(window).load(function () {
+                var guess = $('#guessInput');
+                guess.prop('disabled', false);
+                guess.val("");
+                guess.focus();
+            });
         </script>
     </body>
 </html>
