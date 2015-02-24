@@ -7,6 +7,7 @@
         
         <script src="jquery-2.1.0.min.js" type="text/javascript"></script>
         <script src="peer.js" type="text/javascript"></script>
+        <script src="pokemon.js" type="text/javascript"></script>
         <script src="http://fb.me/react-0.12.2.js"></script>
         <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
         
@@ -159,28 +160,8 @@
                 getInitialState: function() {
                     return {
                         data:{
-                            guessableList: [
-                                {
-                                    pokedexNumber: "001",
-                                    pokemonName: "Bulbasaur",
-                                    guessed: false
-                                },
-                                {
-                                    pokedexNumber: "002",
-                                    pokemonName: "Ivysaur",
-                                    guessed: false
-                                },
-                                {
-                                    pokedexNumber: "003",
-                                    pokemonName: "Venusaur",
-                                    guessed: false
-                                }
-                            ],
-                            guessToListMap: {
-                                bulbasaur: 0,
-                                ivysaur: 1,
-                                venusaur: 2
-                            },
+                            guessableList: pokemon,
+                            guessToListMap: pokemonMap,
                             guess: null,
                             guessNo: 0,
                             guesser: null
@@ -204,7 +185,8 @@
                     }
                     
                     var tempState = this.state;
-                    if (tempState.data.guessToListMap.hasOwnProperty(guess)) {
+                    if (tempState.data.guessToListMap.hasOwnProperty(guess)
+                        && !tempState.data.guessableList[tempState.data.guessToListMap[guess]].guessed) {
                         tempState.data.guessableList[tempState.data.guessToListMap[guess]].guessed = true;
                         tempState.data.guess = guess;
                         tempState.data.guessNo = tempState.data.guessNo + 1;
